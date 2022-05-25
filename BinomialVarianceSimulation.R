@@ -7,7 +7,6 @@ xx[,2]<-sample(70:3000, 100, replace=T)
 xx[,3]<-runif(100,0,1)
 
 
-
 ##CREATE A FUNCTION TO GENERATE A "SAMPLING DISTRIBUTION" OF LIVE/DEAD
 #SPERM BASED ON OBSERVED VIABILITY (WHITHIN MALE) and a given size of sampled 
 #samples (i.e. sampled cells):
