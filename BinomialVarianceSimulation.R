@@ -12,7 +12,7 @@ names(xx)<-c("male","sperm","proportion")
 #SPERM BASED ON OBSERVED VIABILITY (WHITHIN MALE) and a given size of sampled 
 #samples (i.e. sampled cells):
 #
-#Simple function with few things... ignore it
+#Simple function with few things... IGNORE
 testrand1<-function(data,size,repl,z,w){##data: the dataset, size:sample size (i.e. number of sperm), repl: iterazioni per maschio (numero di sottocampioni)
         samplingmeans<-matrix(NA,nrow(data),repl)#these are the proportions of the sampled sperm 
         samplingvariance<-NA
