@@ -85,8 +85,6 @@ testrand<-function(data,repl=100,prop,cells=NA,size=100,K1=1,K2=0,K3=0,K4=0,K5=0
         }
 }
 
-
-
 testrand(xx,prop=3,cells=2,size=40,K1=1,K2=3,K3=1,K4=1)
 
 #######testing time with different sizes
@@ -105,21 +103,5 @@ for (repl in c(10,20,50,100,500,1000,2000)){for (size in c (10,20,50,100,500,100
 library(ggplot2)
 plot(longness[,1],longness[,2])
 ggplot()+geom_point(aes(x=longness[,1],y=longness[,2],size=longness[,5],col=longness[,5]))
-
-#############################################################################
-
-
-dataset<-read.csv("C:/Users/Color&Sound/OneDrive/Desktop/sperm_phenotype.csv",
-                    header = T)
-dataset
-
-##data: the dataset, 
-##repl: iterazioni per maschio (numero di ricampionamenti, 
-##prop=colonna in cui c'è la viability,
-##cells, colonna in cui c'è il numero di spermi,
-##size:sample size (i.e. number of sperm)
-
-testrand(dataset,repl=100,prop=10,size=50,K1=2,K2=3)
-
 
 
