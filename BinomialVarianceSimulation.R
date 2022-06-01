@@ -1,35 +1,7 @@
 ##################################################################################
 ##################################################################################
-#Creating a fake dataset to use
-xx<-matrix(NA,100,3)
-xx[,1]<-rep(c(1:50),2)
-xx[,2]<-sample(70:3000, 100, replace=T)
-xx[,3]<-runif(100,0,1)
-xx<-as.data.frame(xx)
-names(xx)<-c("male","sperm","proportion")
 
-##CREATE A FUNCTION TO GENERATE A "SAMPLING DISTRIBUTION" OF LIVE/DEAD
-#SPERM BASED ON OBSERVED VIABILITY (WHITHIN MALE) and a given size of sampled 
-#samples (i.e. sampled cells):
-#
-#Simple function with few things... IGNORE
-testrand1<-function(data,size,repl,z,w){##data: the dataset, size:sample size (i.e. number of sperm), repl: iterazioni per maschio (numero di sottocampioni)
-        samplingmeans<-matrix(NA,nrow(data),repl)#these are the proportions of the sampled sperm 
-        samplingvariance<-NA
-        yy<-matrix(NA,nrow=nrow(data),max(data,2))## max(data,2) to generate a matrix with a number of coums equal to the biggest number of perm collected
-        celsampled<-NA
-        for(j in 1:repl){
-                for (i in 1:nrow(data)){
-                        yy[i,]<-c(rbinom(data[i,2], 1, data[i,3]),rep(NA,(max(data,2)-data[i,2])))#yy[i,]<-rbinom(data[i,2], 1, data[i,3])### data[i,2] here is to generate a binomial variable based on the number of sperm observed. it was "size" to generate one based on a fixed sample
-                        samplingmeans[,j]<-rowMeans(yy,na.rm =T) #in samplingmeans mi genera una serie di proporzioni (n=repl) basate OGNI VOLTA su un numero di "spermi" uguale a quelli testati nel maschio
-                }
-                celsampled<-rowSums(!is.na(yy))}
-        for (h in 1:nrow(samplingmeans)){
-                samplingvariance[h]<-var(samplingmeans[h,])
-        }
-        samplingmeans<-cbind(data[,c(1:3)],samplingvariance,celsampled,samplingmeans[,c(1:5)])
-        samplingmeans
-}
+
 
 
 ########################
@@ -85,11 +57,33 @@ testrand<-function(data,repl=100,prop,cells=NA,size=100,K1=1,K2=0,K3=0,K4=0,K5=0
         }
 }
 
-testrand(xx,prop=3,cells=2,size=40,K1=1,K2=3,K3=1,K4=1)
 
-#######testing time with different sizes
+###EXAMPLES
 
-results<-NULL
+#Creating a fake dataset to use for testing the function
+xx<-matrix(NA,100,3)
+xx[,1]<-rep(c(1:50),2)
+xx[,2]<-sample(70:3000, 100, replace=T)
+xx[,3]<-runif(100,0,1)
+xx<-as.data.frame(xx)
+names(xx)<-c("male","sperm","proportion")
+xx$spermsums<-round(xx$sperm/10) 
+
+#specifying the position (column number) using "cells" of the variable where the number of cells is present
+testrand(xx,prop=3,cells=2,K1=1,K2=2,K3=3)
+testrand(xx,prop=3,cells=4,K1=1,K2=2,K3=3)
+
+
+#specifying a fixed number of cells using "size". In this case "cells" HAS TO BE OMITTED
+testrand(xx,prop=3,size=40,K1=1,K2=2,K3=3)
+
+#specifying a fixed number of cells and the number of permutations
+testrand(xx,prop=3,repl= 500,size=55,K1=1,K2=2,K3=3)
+
+
+##testing time with different sizes using the xx fake dataset. Ignore it uless you want to see how
+##the time needed o perform the task changes with different permutations and cells sample size
+#results<-NULL
 longness<-(NULL)
 
 for (repl in c(10,20,50,100,500,1000,2000)){for (size in c (10,20,50,100,500,1000,2000)){
@@ -105,3 +99,34 @@ plot(longness[,1],longness[,2])
 ggplot()+geom_point(aes(x=longness[,1],y=longness[,2],size=longness[,5],col=longness[,5]))
 
 
+
+
+
+
+
+
+#below a simpler function from wich a started
+###################################################################################
+##CREATE A FUNCTION TO GENERATE A "SAMPLING DISTRIBUTION" OF LIVE/DEAD
+#SPERM BASED ON OBSERVED VIABILITY (WHITHIN MALE) and a given size of sampled 
+#samples (i.e. sampled cells):
+#
+#Simple function with few things... IGNORE
+#testrand1<-function(data,size,repl,z,w){##data: the dataset, size:sample size (i.e. number of sperm), repl: iterazioni per maschio (numero di sottocampioni)
+#        samplingmeans<-matrix(NA,nrow(data),repl)#these are the proportions of the sampled sperm 
+#        samplingvariance<-NA
+#        yy<-matrix(NA,nrow=nrow(data),max(data,2))## max(data,2) to generate a matrix with a number of coums equal to the biggest number of perm collected
+#        celsampled<-NA
+#        for(j in 1:repl){
+#                for (i in 1:nrow(data)){
+#                        yy[i,]<-c(rbinom(data[i,2], 1, data[i,3]),rep(NA,(max(data,2)-data[i,2])))#yy[i,]<-rbinom(data[i,2], 1, data[i,3])### data[i,2] here is to generate a binomial variable based on the number of sperm observed. it was "size" to generate one based on a fixed sample
+#                        samplingmeans[,j]<-rowMeans(yy,na.rm =T) #in samplingmeans mi genera una serie di proporzioni (n=repl) basate OGNI VOLTA su un numero di "spermi" uguale a quelli testati nel maschio
+#                }
+#                celsampled<-rowSums(!is.na(yy))}
+#        for (h in 1:nrow(samplingmeans)){
+#                samplingvariance[h]<-var(samplingmeans[h,])
+#        }
+#        samplingmeans<-cbind(data[,c(1:3)],samplingvariance,celsampled,samplingmeans[,c(1:5)])
+#        samplingmeans
+#}
+###########################################################################################
